@@ -16,7 +16,7 @@ composer install
 
 Push to your fork and **[submit a pull request][pr]**.
 
-[pr]: https://github.com/apility/netflex-support/compare/
+[pr]: https://github.com/netflex-sdk/support/compare/
 
 At this point you're waiting on us to accept the request. We like to at least comment on pull requests
 within a week (and, typically, within 24 hours). We may suggest

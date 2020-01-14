@@ -1,5 +1,5 @@
 {
-  "name": "apility/netflex-support",
+  "name": "netflex/support",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -14,7 +14,7 @@
     }
   },
   "require": {
-    "apility/netflex-api": "^1.0",
+    "netflex/api": "^1.0",
     "tightenco/collect": "^6.3",
     "nesbot/carbon": "^2.28"
   },
