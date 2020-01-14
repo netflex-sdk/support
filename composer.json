@@ -1,5 +1,6 @@
 {
   "name": "netflex/support",
+  "description": "Netflex Support library",
   "type": "library",
   "license": "MIT",
   "authors": [
