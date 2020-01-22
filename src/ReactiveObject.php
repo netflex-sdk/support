@@ -4,8 +4,9 @@ namespace Netflex\Support;
 
 use ArrayAccess;
 use JsonSerializable;
-use Carbon\Carbon;
 use ReflectionClass;
+
+use Illuminate\Support\Carbon;
 
 abstract class ReactiveObject implements ArrayAccess, JsonSerializable
 {
