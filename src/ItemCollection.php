@@ -3,7 +3,7 @@
 namespace Netflex\Support;
 
 use JsonSerializable;
-use Tightenco\Collect\Support\Collection as BaseCollection;
+use Illuminate\Support\Collection as BaseCollection;
 
 abstract class ItemCollection extends BaseCollection implements JsonSerializable
 {
@@ -89,7 +89,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    * Run a map over each of the items.
    *
    * @param callable $callback
-   * @return Tightenco\Collect\Support\Collection
+   * @return Illuminate\Support\Collection
    */
   public function map(callable $callback)
   {
