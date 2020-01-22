@@ -45,6 +45,20 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   {
     return new static($items, $parent);
   }
+  
+  /**
+   * @return ReactiveObject|ItemCollection|null
+   */
+  public function getRootParent()
+  {
+    $parent = $this->parent;
+    
+    while (!empty($parent->parent)) {
+      $parent = $parent->parent;
+    }
+    
+    return $parent;
+  }
 
   /**
    * Set the item at a given offset.
