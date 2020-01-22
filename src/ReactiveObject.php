@@ -15,7 +15,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   use Accessors;
 
   /** @var ReactiveObject|ItemCollection|null */
-  protected $parent = null;
+  public $parent = null;
 
   /** @var array */
   protected $defaults = [];
@@ -62,6 +62,20 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   public function getParent()
   {
     return $this->parent;
+  }
+  
+  /**
+   * @return ReactiveObject|ItemCollection|null
+   */
+  public function getRootParent()
+  {
+    $parent = $this->parent;
+    
+    while (!empty($parent->parent)) {
+      $parent = $parent->parent;
+    }
+    
+    return $parent;
   }
 
   /**

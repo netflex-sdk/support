@@ -10,7 +10,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   use Hooks;
 
   /** @var ReactiveObject|ItemCollection|null */
-  protected $parent = null;
+  public $parent = null;
 
   /** @var string */
   protected static $type = ReactiveObject::class;
@@ -44,6 +44,20 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   public static function factory($items = [], $parent = null)
   {
     return new static($items, $parent);
+  }
+  
+  /**
+   * @return ReactiveObject|ItemCollection|null
+   */
+  public function getRootParent()
+  {
+    $parent = $this->parent;
+    
+    while (!empty($parent->parent)) {
+      $parent = $parent->parent;
+    }
+    
+    return $parent;
   }
 
   /**
