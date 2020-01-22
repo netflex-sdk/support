@@ -2,8 +2,10 @@
 
 use Mocks\TestObjectWithTimestamps;
 use PHPUnit\Framework\TestCase;
-use Carbon\Carbon;
+
 use Netflex\Support\ReactiveObject;
+
+use Illuminate\Support\Carbon;
 
 final class TimestampsTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Netflex\Support;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 trait Timestamps
 {
