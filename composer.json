@@ -15,9 +15,8 @@
     }
   },
   "require": {
-    "netflex/api": "^2.0",
-    "tightenco/collect": "^6.3",
-    "nesbot/carbon": "^2.28"
+    "netflex/api": "^3.0",
+    "illuminate/support": "^6.12"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",
