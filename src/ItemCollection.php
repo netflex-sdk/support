@@ -10,7 +10,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   use Hooks;
 
   /** @var ReactiveObject|ItemCollection|null */
-  protected $parent = null;
+  public $parent = null;
 
   /** @var string */
   protected static $type = ReactiveObject::class;
