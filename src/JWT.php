@@ -91,7 +91,7 @@ class JWT
     $payload = static::base64UrlEncode(json_encode($token->payload));
     $signature = hash_hmac('sha256', "$header.$payload", $secret, true);
 
-    return hash_equals($token->signature, $signature) && ($token->header->exp ?? 0) >= time();
+    return hash_equals($token->signature, $signature) && ($token->payload->exp ?? 0) >= time();
   }
 
   /**
