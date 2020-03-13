@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "netflex/api": "^2.0.0-RC2",
+    "netflex/api": "^2.0",
     "illuminate/support": "^7.0"
   },
   "require-dev": {
