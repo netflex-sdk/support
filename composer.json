@@ -15,14 +15,16 @@
     }
   },
   "require": {
-    "netflex/api": "^3.0",
-    "illuminate/support": "^6.12"
+    "netflex/api": "^2.0",
+    "illuminate/support": "^7.0"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",
     "larapack/dd": "^1.1",
     "phpunit/phpunit": "^8.5"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "scripts": {
     "tests": "vendor/bin/phpunit --testdox --colors=always"
   }
