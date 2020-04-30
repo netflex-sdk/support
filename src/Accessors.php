@@ -23,6 +23,16 @@ trait Accessors
   }
 
   /**
+   * Get the raw attributes
+   *
+   * @return array
+   */
+  public function toArray()
+  {
+    return $this->attributes;
+  }
+
+  /**
    * @param string $property
    * @return mixed
    */
