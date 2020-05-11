@@ -23,8 +23,6 @@
     "larapack/dd": "^1.1",
     "phpunit/phpunit": "^8.5"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "scripts": {
     "tests": "vendor/bin/phpunit --testdox --colors=always"
   }
