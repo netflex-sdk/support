@@ -2,11 +2,17 @@
 
 namespace Netflex\Support;
 
-class Str
+use Illuminate\Support\Str as BaseStr;
+
+/**
+ * @deprecated v3.2.1
+ */
+class Str extends BaseStr
 {
   /**
    * @param string $str
    * @return string
+   * @deprecated v3.2.1
    */
   public static function toCamcelCase(string $str): string
   {
