@@ -125,4 +125,20 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
 
     return [];
   }
+
+  public function __serialize(): array
+  {
+    return [
+      'parent' => $this->parent,
+      'items' => $this->items,
+      'hooks' => []
+    ];
+  }
+
+  public function __unserialize(array $data): void
+  {
+    $this->parent = $data['parent'] ?? null;
+    $this->items = $data['items'] ?? [];
+    $this->hooks = $data['hooks'] ?? [];
+  }
 }
