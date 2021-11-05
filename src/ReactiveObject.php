@@ -63,18 +63,18 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   {
     return $this->parent;
   }
-  
+
   /**
    * @return ReactiveObject|ItemCollection|null
    */
   public function getRootParent()
   {
     $parent = $this->parent;
-    
+
     while (!empty($parent->parent)) {
       $parent = $parent->parent;
     }
-    
+
     return $parent;
   }
 
@@ -145,5 +145,19 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
       $trait,
       array_keys((new ReflectionClass(self::class))->getTraits())
     );
+  }
+
+  public function __serialize(): array
+  {
+    return [
+      'parent' => $this->parent,
+      'attributes' => $this->attributes ?? []
+    ];
+  }
+
+  public function __unserialize(array $data)
+  {
+    $this->parent = $data['parent'];
+    $this->attributes = $data['attributes'] ?? [];
   }
 }
