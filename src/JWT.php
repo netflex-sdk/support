@@ -35,21 +35,24 @@ class JWT
    * @param string $iss
    * @return string
    */
-  public static function create($payload = [], $secret, $exp = 60, $iss = 'netflex')
+  public static function create($payload = [], $secret = null, $exp = 60, $iss = 'netflex')
   {
     if (!$secret) {
       throw new Exception('JWT secret missing');
     }
 
     $header = [
-      'iat' => time(),
-      'exp' => time() + $exp,
-      'iss' => $iss,
       'typ' => 'JWT',
       'alg' => 'HS256'
     ];
 
     $token = [];
+
+    $payload = array_merge([
+      'iat' => time(),
+      'exp' => time() + $exp,
+      'iss' => $iss,
+    ], $payload);
 
     $token[] = static::base64UrlEncode(json_encode($header));
     $token[] = static::base64UrlEncode(json_encode($payload));
@@ -91,7 +94,7 @@ class JWT
     $payload = static::base64UrlEncode(json_encode($token->payload));
     $signature = hash_hmac('sha256', "$header.$payload", $secret, true);
 
-    return hash_equals($token->signature, $signature) && ($token->payload->exp ?? 0) >= time();
+    return hash_equals($token->signature, $signature) && (!isset($token->payload->exp) || ($token->payload->exp ?? 0) >= time());
   }
 
   /**
