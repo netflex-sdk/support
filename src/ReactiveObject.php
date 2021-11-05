@@ -157,7 +157,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
 
   public function __unserialize(array $data)
   {
-    $this->parent = $data['parent'];
+    $this->parent = $data['parent'] ?? null;
     $this->attributes = $data['attributes'] ?? [];
   }
 }
