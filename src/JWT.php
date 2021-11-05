@@ -35,7 +35,7 @@ class JWT
    * @param string $iss
    * @return string
    */
-  public static function create($payload = [], $secret = null, $exp = 60, $iss = 'netflex')
+  public static function create($payload = [], $secret, $exp = 60, $iss = 'netflex')
   {
     if (!$secret) {
       throw new Exception('JWT secret missing');
