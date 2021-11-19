@@ -6,7 +6,7 @@
 <a href="https://github.com/netflex-sdk/sdk/graphs/contributors"><img src="https://img.shields.io/github/contributors/netflex-sdk/sdk.svg?color=green" alt="Contributors"></a>
 <a href="https://packagist.org/packages/netflex/support/stats"><img src="https://img.shields.io/packagist/dm/netflex/support" alt="Downloads"></a>
 
-[READ ONLY] Subtree split of the Netflex Support component (see [netflex/framework](https://github.con/netflex-sdk/framework))
+[READ ONLY] Subtree split of the Netflex Support component (see [netflex/framework](https://github.com/netflex-sdk/framework))
 
 Support library for the Netflex SDK and platform.
 
