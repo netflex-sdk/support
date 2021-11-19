@@ -1,5 +1,7 @@
 # Netflex Support
 
+[READ ONLY] Subtree split of the Netflex Support component (see [netflex/framework](https://github.con/netflex-sdk/framework))
+
 Support library for the Netflex SDK and platform.
 
 [![CircleCI](https://circleci.com/gh/netflex-sdk/support.svg?style=shield)](https://circleci.com/gh/netflex-sdk/support)
