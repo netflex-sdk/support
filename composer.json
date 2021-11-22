@@ -1,0 +1,31 @@
+{
+  "name": "netflex/support",
+  "description": "Netflex Support library",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Alrek",
+      "email": "thomas@apility.no"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Netflex\\Support\\": "src/"
+    }
+  },
+  "require": {
+    "netflex/api": "^3.0",
+    "illuminate/support": "^8.0",
+    "illuminate/contracts": "^8.0",
+    "illuminate/events": "^8.42"
+  },
+  "require-dev": {
+    "vlucas/phpdotenv": "^4.0",
+    "larapack/dd": "^1.1",
+    "phpunit/phpunit": "^9.0"
+  },
+  "scripts": {
+    "tests": "vendor/bin/phpunit --testdox --colors=always"
+  }
+}
