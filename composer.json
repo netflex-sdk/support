@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "netflex/api": "^4.0.15",
+        "netflex/api": "^4.0.16",
         "illuminate/support": "^8.0",
         "illuminate/contracts": "^8.0",
         "illuminate/events": "^8.0"
@@ -27,5 +27,10 @@
     },
     "scripts": {
         "tests": "vendor/bin/phpunit --testdox --colors=always"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.1.x-dev"
+        }
     }
 }
