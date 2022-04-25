@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "netflex/api": "^4.9.10",
+        "netflex/api": "^4.10",
         "illuminate/support": "^8.0",
         "illuminate/contracts": "^8.0",
         "illuminate/events": "^8.0"
