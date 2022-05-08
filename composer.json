@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "netflex/api": "^4.12",
+        "netflex/api": "^4.13",
         "illuminate/support": "^8.0",
         "illuminate/contracts": "^8.0",
         "illuminate/events": "^8.0"
@@ -30,7 +30,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.12.x-dev"
+            "dev-master": "4.13.x-dev"
         }
     }
 }
