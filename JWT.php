@@ -80,7 +80,7 @@ class JWT
   /**
    * @param string $jwt
    * @param string $secret
-   * @return object
+   * @return bool
    */
   public static function verify($jwt, ?string $secret = null)
   {
@@ -94,7 +94,7 @@ class JWT
     $payload = static::base64UrlEncode(json_encode($token->payload));
     $signature = hash_hmac('sha256', "$header.$payload", $secret, true);
 
-    return hash_equals($token->signature, $signature) && (!isset($token->payload->exp) || ($token->payload->exp ?? 0) >= time());
+    return data_get($token, 'signature') && hash_equals($token->signature, $signature) && (!isset($token->payload->exp) || ($token->payload->exp ?? 0) >= time());
   }
 
   /**
