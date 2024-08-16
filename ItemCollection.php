@@ -297,6 +297,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * @return array
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize()
   {
     $items = $this->all();
