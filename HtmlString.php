@@ -9,7 +9,6 @@ use Illuminate\Contracts\Support\Jsonable;
 
 class HtmlString extends BaseHtmlString implements JsonSerializable, Jsonable
 {
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->__toString();
