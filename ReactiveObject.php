@@ -114,6 +114,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   /**
    * @return array
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize()
   {
     $json = [];
