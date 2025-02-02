@@ -110,6 +110,13 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return $this;
   }
 
+  public function pull($key, $default = null)
+  {
+    parent::pull($key, $default);
+    $this->performHook('modified');
+    return $this;
+  }
+
   /**
    * Splice a portion of the underlying collection array.
    *
@@ -305,6 +312,19 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     if ($items && count($items)) {
       return array_map(function ($item) {
         return $item->jsonSerialize();
+      }, $items);
+    }
+
+    return [];
+  }
+
+  public function toModifiedArray()
+  {
+    $items = $this->all();
+
+    if ($items && count($items)) {
+      return array_map(function (ReactiveObject $item) {
+        return $item->toModifiedArray();
       }, $items);
     }
 
