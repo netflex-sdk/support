@@ -66,6 +66,10 @@ trait Accessors
    */
   public function __set($property, $value)
   {
+    if (property_exists($this, $property)) {
+      return $this->{$property} = $value;
+    }
+
     if (
       !property_exists($this, 'readOnlyAttributes') ||
       !in_array($property, $this->readOnlyAttributes)
@@ -113,7 +117,7 @@ trait Accessors
    * @param string $property
    * @return bool
    */
-  public function offsetExists($property)
+  public function offsetExists(mixed $property): bool
   {
     $getter = $this->getterName($property);
 
@@ -124,7 +128,7 @@ trait Accessors
    * @param string $property
    * @return mixed
    */
-  public function offsetGet($property)
+  public function offsetGet(mixed $property): mixed
   {
     return $this->__get($property);
   }
@@ -134,7 +138,7 @@ trait Accessors
    * @param mixed $value
    * @return mixed
    */
-  public function offsetSet($property, $value)
+  public function offsetSet(mixed $property, mixed $value): void
   {
     $this->__set($property, $value);
   }
@@ -143,7 +147,7 @@ trait Accessors
    * @param string $key
    * @return void
    */
-  public function offsetUnset($key)
+  public function offsetUnset(mixed $key): void
   {
     $this->__unset($key);
   }
