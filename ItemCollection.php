@@ -161,25 +161,25 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Set the item at a given offset.
    *
-   * @param string|int $offset
+   * @param string|int $key
    * @param mixed $value
    * @return void
    */
-  public function offsetSet($offset, $value)
+  public function offsetSet($key, $value): void
   {
-    parent::offsetSet($offset, $value);
+    parent::offsetSet($key, $value);
     $this->performHook('modified');
   }
 
   /**
    * Unset the item at a given offset.
    *
-   * @param string|int $offset
+   * @param string|int $key
    * @return void
    */
-  public function offsetUnset($offset)
+  public function offsetUnset($key): void
   {
-    parent::offsetUnset($offset);
+    parent::offsetUnset($key);
     $this->performHook('modified');
   }
 
@@ -301,11 +301,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return new BaseCollection(parent::mapWithKeys($callback));
   }
 
-  /**
-   * @return array
-   */
-  #[\ReturnTypeWillChange]
-  public function jsonSerialize()
+  public function jsonSerialize(): array
   {
     $items = $this->all();
 
