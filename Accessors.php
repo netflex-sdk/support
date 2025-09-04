@@ -66,6 +66,10 @@ trait Accessors
    */
   public function __set($property, $value)
   {
+    if (property_exists($this, $property)) {
+      return $this->{$property} = $value;
+    }
+
     if (
       !property_exists($this, 'readOnlyAttributes') ||
       !in_array($property, $this->readOnlyAttributes)

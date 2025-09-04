@@ -15,14 +15,13 @@
         }
     },
     "require": {
-        "netflex/api": "^4.33",
-        "illuminate/support": "^8.0",
-        "illuminate/contracts": "^8.0",
-        "illuminate/events": "^8.0"
+        "netflex/api": "^6.0",
+        "illuminate/support": "^12.0",
+        "illuminate/contracts": "^12.0",
+        "illuminate/events": "^12.0"
     },
     "require-dev": {
         "vlucas/phpdotenv": "^5.2",
-        "larapack/dd": "^1.1",
         "phpunit/phpunit": "^9.0"
     },
     "scripts": {
@@ -30,7 +29,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.33.x-dev"
+            "dev-master": "6.0.x-dev"
         }
     }
 }

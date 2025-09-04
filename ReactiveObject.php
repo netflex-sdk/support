@@ -27,8 +27,11 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
    * @param object|array $attributes = []
    * @param object|null $parent = null
    */
-  public function __construct($attributes = [], $parent = null)
-  {
+  public function __construct(
+    $attributes = [],
+    $parent = null,
+    $markAttributesAsModified = false,
+  ) {
     $this->parent = $parent;
 
     if (is_object($attributes) || is_array($attributes)) {
@@ -43,6 +46,11 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
           $this->attributes[$property] = $this->value;
         }
       }
+    }
+
+    if ($markAttributesAsModified) {
+      array_push($this->modified, ...array_keys($attributes));
+      $this->modified = array_unique($this->modified);
     }
   }
 
@@ -138,6 +146,39 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
     }
 
     return $json;
+  }
+
+  public function toModifiedArray(): array
+  {
+    $array = [];
+
+    if ($this->__isset('id')) {
+      $array['id'] = $this->__get('id');
+    }
+
+    foreach ($this->modified as $property) {
+      $value = $this->__get($property);
+
+      if ($value instanceof ItemCollection) {
+        $value = $value->toModifiedArray();
+      }
+
+      if ($value instanceof ReactiveObject) {
+        $value = $value->toModifiedArray();
+      }
+
+      if (
+        ($value instanceof Carbon)
+        && property_exists($this, 'timestamps')
+        && in_array($property, $this->timestamps)
+      ) {
+        $value = $this->serializeTimestamp($value);
+      }
+
+      $array[$property] = $value;
+    }
+
+    return $array;
   }
 
   public static function hasTrait($trait)

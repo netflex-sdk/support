@@ -110,6 +110,13 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return $this;
   }
 
+  public function pull($key, $default = null)
+  {
+    parent::pull($key, $default);
+    $this->performHook('modified');
+    return $this;
+  }
+
   /**
    * Splice a portion of the underlying collection array.
    *
@@ -154,25 +161,25 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Set the item at a given offset.
    *
-   * @param string|int $offset
+   * @param string|int $key
    * @param mixed $value
    * @return void
    */
-  public function offsetSet($offset, $value)
+  public function offsetSet($key, $value): void
   {
-    parent::offsetSet($offset, $value);
+    parent::offsetSet($key, $value);
     $this->performHook('modified');
   }
 
   /**
    * Unset the item at a given offset.
    *
-   * @param string|int $offset
+   * @param string|int $key
    * @return void
    */
-  public function offsetUnset($offset)
+  public function offsetUnset($key): void
   {
-    parent::offsetUnset($offset);
+    parent::offsetUnset($key);
     $this->performHook('modified');
   }
 
@@ -294,17 +301,26 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return new BaseCollection(parent::mapWithKeys($callback));
   }
 
-  /**
-   * @return array
-   */
-  #[\ReturnTypeWillChange]
-  public function jsonSerialize()
+  public function jsonSerialize(): array
   {
     $items = $this->all();
 
     if ($items && count($items)) {
       return array_map(function ($item) {
         return $item->jsonSerialize();
+      }, $items);
+    }
+
+    return [];
+  }
+
+  public function toModifiedArray()
+  {
+    $items = $this->all();
+
+    if ($items && count($items)) {
+      return array_map(function (ReactiveObject $item) {
+        return $item->toModifiedArray();
       }, $items);
     }
 
