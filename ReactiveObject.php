@@ -36,7 +36,14 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
 
     if (is_object($attributes) || is_array($attributes)) {
       foreach ($attributes as $property => $value) {
-        $this->attributes[$property] = $value;
+        if (
+          in_array($property, $this->readOnlyAttributes)
+          || !$markAttributesAsModified
+        ) {
+          $this->attributes[$property] = $value;
+        } else {
+          $this->{$property} = $value;
+        }
       }
     }
 
