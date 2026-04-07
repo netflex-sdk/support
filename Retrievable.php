@@ -15,7 +15,9 @@ trait Retrievable
   {
     if (property_exists(get_called_class(), 'base_path')) {
       return new static(
-        API::get(trim(static::$base_path, '/') . '/' . $id)
+        API::get(trim(static::$base_path, '/') . '/' . $id),
+        null,
+        false,
       );
     }
   }
@@ -29,7 +31,7 @@ trait Retrievable
       return Collection::make(
         API::get(trim(static::$base_path, '/'))
       )->map(function ($attributes) {
-        return static::factory($attributes);
+        return new static($attributes, null, false);
       });
     }
   }

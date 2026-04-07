@@ -2,18 +2,24 @@
 
 namespace Netflex\Support;
 
+use InvalidArgumentException;
 use JsonSerializable;
 use Illuminate\Support\Collection as BaseCollection;
 
+/**
+ * @template TKey of array-key
+ * @template TItem of ReactiveObject
+ *
+ * @extends BaseCollection<TKey, TItem>
+ */
 abstract class ItemCollection extends BaseCollection implements JsonSerializable
 {
   use Hooks;
 
-  /** @var ReactiveObject|ItemCollection|null */
-  public $parent = null;
+  public ReactiveObject|null $parent = null;
 
-  /** @var string */
-  protected static $type = ReactiveObject::class;
+  /** @var class-string<TItem> */
+  protected static string $type = ReactiveObject::class;
 
   /**
    * @param array|null $items = []
@@ -23,18 +29,37 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     $this->parent = $parent;
 
     if ($items) {
-      parent::__construct(array_map(function ($item) {
-        if (!($item instanceof static::$type)) {
-          $item = static::$type::factory($item);
-        }
-
-        $item->setParent($this);
-
-        return $item->addHook('modified', function ($_) {
-          $this->performHook('modified');
-        });
-      }, $items));
+      parent::__construct(array_map(
+        fn ($item) => ($this->wireItem($item)),
+        $items,
+      ));
     }
+  }
+
+  /** @return TItem */
+  protected function wireItem(mixed $item): ReactiveObject
+  {
+    if (
+      $item instanceof ReactiveObject
+      && !($item instanceof static::$type)
+    ) {
+      throw new InvalidArgumentException(sprintf(
+        'Expected instance of %s, got %s',
+        static::$type,
+        get_class($item),
+      ));
+    }
+
+    if (!($item instanceof static::$type)) {
+      $item = new (static::$type)($item, null, false);
+    }
+
+    $item->setParent($this);
+
+    return $item->addHook(
+      'modified',
+      fn () => ($this->performHook('modified')),
+    );
   }
 
   /**
@@ -92,7 +117,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function prepend($value, $key = null)
   {
-    return parent::prepend($value, $key);
+    parent::prepend($this->wireItem($value), $key);
     $this->performHook('modified');
     return $this;
   }
@@ -105,7 +130,10 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function push(...$values)
   {
-    parent::push(...$values);
+    parent::push(...array_map(
+      fn ($item) => ($this->wireItem($item)),
+      $values,
+    ));
     $this->performHook('modified');
     return $this;
   }
@@ -127,6 +155,10 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function splice($offset, $length = null, $replacement = [])
   {
+    $replacement = array_map(
+      fn ($item) => ($this->wireItem($item)),
+      $replacement,
+    );
     parent::splice($offset, $length, $replacement);
     $this->performHook('modified');
     return $this;
@@ -140,7 +172,11 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function transform(callable $callback)
   {
-    parent::transform($callback);
+    parent::transform(
+      fn ($item, $key) => (
+        $this->wireItem($callback($item, $key))
+      ),
+    );
     $this->performHook('modified');
     return $this;
   }
@@ -153,7 +189,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function add($item)
   {
-    parent::add($item);
+    parent::add($this->wireItem($item));
     $this->performHook('modified');
     return $this;
   }
@@ -167,7 +203,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
    */
   public function offsetSet($key, $value): void
   {
-    parent::offsetSet($key, $value);
+    parent::offsetSet($key, $this->wireItem($value));
     $this->performHook('modified');
   }
 

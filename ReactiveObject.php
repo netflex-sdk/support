@@ -8,14 +8,17 @@ use ReflectionClass;
 
 use Illuminate\Support\Carbon;
 
+/**
+ * @template TParent of ReactiveObject|ItemCollection|null
+ */
 abstract class ReactiveObject implements ArrayAccess, JsonSerializable
 {
   use Hooks;
   use Events;
   use Accessors;
 
-  /** @var ReactiveObject|ItemCollection|null */
-  public $parent = null;
+  /** @var TParent */
+  public ReactiveObject|ItemCollection|null $parent = null;
 
   /** @var array */
   protected $defaults = [];
@@ -30,7 +33,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   public function __construct(
     $attributes = [],
     $parent = null,
-    $markAttributesAsModified = false,
+    $markAttributesAsModified = true,
   ) {
     $this->parent = $parent;
 
@@ -62,7 +65,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   }
 
   /**
-   * @param ReactiveObject|ItemCollection|null $parent
+   * @param TParent $parent
    * @return static
    */
   public function setParent($parent)
@@ -71,9 +74,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
     return $this;
   }
 
-  /**
-   * @return ReactiveObject|ItemCollection|null
-   */
+  /** @return TParent */
   public function getParent()
   {
     return $this->parent;
@@ -121,9 +122,12 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
    * @param object|null $parent = null
    * @return static
    */
-  public static function factory($attributes = [], $parent = null)
-  {
-    return new static($attributes, $parent);
+  public static function factory(
+    $attributes = [],
+    $parent = null,
+    $markAttributesAsModified = true,
+  ) {
+    return new static($attributes, $parent, $markAttributesAsModified);
   }
 
   /**
