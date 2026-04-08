@@ -86,18 +86,35 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   }
 
   /**
+   * Get and remove the first N items from the collection.
+   *
+   * @param  int<0, max>  $count
+   * @return ($count is 1 ? TValue|null : static<int, TValue>)
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function shift($count = 1)
+  {
+    $modifies = !$this->isEmpty();
+
+    $result = parent::shift($count);
+
+    if ($modifies) {
+      $this->performHook('modified');
+    }
+
+    return $result;
+  }
+
+  /**
    * Get and remove the last N items from the collection.
    *
-   * @param int $count
-   * @return mixed
+   * @param  int  $count
+   * @return ($count is 1 ? TValue|null : static<int, TValue>)
    */
   public function pop($count = 1)
   {
-    $modifies = true;
-
-    if ($this->isEmpty()) {
-      $modifies = false;
-    }
+    $modifies = !$this->isEmpty();
 
     $result = parent::pop($count);
 
@@ -179,6 +196,34 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     );
     $this->performHook('modified');
     return $this;
+  }
+
+  public function remove(ReactiveObject $item): static
+  {
+    $key = $this->search($item);
+
+    if ($key !== false) {
+      $item->parent = null;
+      $this->splice($key, 1);
+    }
+
+    return $this;
+  }
+
+  /** @return TItem */
+  public function create(
+    array $attributes = [],
+    bool $markAttributesAsModified = true,
+  ): ReactiveObject {
+    $item = new (static::$type)(
+      $attributes,
+      $this,
+      $markAttributesAsModified,
+    );
+
+    $this->add($item);
+
+    return $item;
   }
 
   /**

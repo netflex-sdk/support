@@ -74,6 +74,17 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
     return $this;
   }
 
+  public function detach(): static
+  {
+    if ($this->parent instanceof ItemCollection) {
+      $this->parent->remove($this);
+    }
+
+    $this->parent = null;
+
+    return $this;
+  }
+
   /** @return TParent */
   public function getParent()
   {
