@@ -27,11 +27,11 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
   protected array $readOnlyAttributes = ['id'];
 
   /**
-   * @param object|array $attributes = []
+   * @param object|array|null $attributes = null
    * @param ReactiveObject|ItemCollection|null $parent = null
    */
   public function __construct(
-    object|array $attributes = [],
+    object|array|null $attributes = null,
     ReactiveObject|ItemCollection|null $parent = null,
     $markAttributesAsModified = true,
   ) {
@@ -59,7 +59,7 @@ abstract class ReactiveObject implements ArrayAccess, JsonSerializable
     }
 
     if ($markAttributesAsModified) {
-      array_push($this->modified, ...array_keys($attributes));
+      array_push($this->modified, ...array_keys((array) $attributes));
       $this->modified = array_unique($this->modified);
     }
   }
