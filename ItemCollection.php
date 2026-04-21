@@ -2,15 +2,16 @@
 
 namespace Netflex\Support;
 
+use Closure;
 use InvalidArgumentException;
 use JsonSerializable;
 use Illuminate\Support\Collection as BaseCollection;
 
 /**
  * @template TKey of array-key
- * @template TItem of ReactiveObject
+ * @template TValue of ReactiveObject
  *
- * @extends BaseCollection<TKey, TItem>
+ * @extends BaseCollection<TKey, TValue>
  */
 abstract class ItemCollection extends BaseCollection implements JsonSerializable
 {
@@ -18,7 +19,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
 
   public ReactiveObject|null $parent = null;
 
-  /** @var class-string<TItem> */
+  /** @var class-string<TValue> */
   protected static string $type = ReactiveObject::class;
 
   /**
@@ -36,7 +37,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     }
   }
 
-  /** @return TItem */
+  /** @return TValue */
   protected function wireItem(mixed $item): ReactiveObject
   {
     if (
@@ -88,10 +89,10 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Get and remove the first N items from the collection.
    *
-   * @param  int<0, max>  $count
+   * @param int<0, max> $count
    * @return ($count is 1 ? TValue|null : static<int, TValue>)
    *
-   * @throws \InvalidArgumentException
+   * @throws InvalidArgumentException
    */
   public function shift($count = 1)
   {
@@ -109,7 +110,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Get and remove the last N items from the collection.
    *
-   * @param  int  $count
+   * @param int $count
    * @return ($count is 1 ? TValue|null : static<int, TValue>)
    */
   public function pop($count = 1)
@@ -128,8 +129,8 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Push an item onto the beginning of the collection.
    *
-   * @param mixed $value
-   * @param mixed $key
+   * @param TValue|array $value
+   * @param TKey|null $key
    * @return $this
    */
   public function prepend($value, $key = null)
@@ -142,7 +143,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Push one or more items onto the end of the collection.
    *
-   * @param mixed $values
+   * @param TValue|array ...$values
    * @return $this
    */
   public function push(...$values)
@@ -155,19 +156,28 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return $this;
   }
 
+  /**
+   * Get and remove an item from the collection.
+   *
+   * @template TPullDefault
+   *
+   * @param TKey $key
+   * @param TPullDefault|(Closure(): TPullDefault)  $default
+   * @return TValue|TPullDefault
+   */
   public function pull($key, $default = null)
   {
-    parent::pull($key, $default);
+    $value = parent::pull($key, $default);
     $this->performHook('modified');
-    return $this;
+    return $value;
   }
 
   /**
    * Splice a portion of the underlying collection array.
    *
-   * @param int $offset
-   * @param int|null $length
-   * @param mixed $replacement
+   * @param  int  $offset
+   * @param  int|null  $length
+   * @param  array<array-key, TValue>  $replacement
    * @return static
    */
   public function splice($offset, $length = null, $replacement = [])
@@ -184,8 +194,8 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Transform each item in the collection using a callback.
    *
-   * @param callable $callback
-   * @return $this
+   * @param  callable(TValue, TKey): (TValue|array)  $callback
+   * @return static
    */
   public function transform(callable $callback)
   {
@@ -210,7 +220,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
     return $this;
   }
 
-  /** @return TItem */
+  /** @return TValue */
   public function create(
     array $attributes = [],
     bool $markAttributesAsModified = true,
@@ -229,7 +239,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Add an item to the collection.
    *
-   * @param mixed $item
+   * @param TValue|array $item
    * @return $this
    */
   public function add($item)
@@ -242,8 +252,8 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Set the item at a given offset.
    *
-   * @param string|int $key
-   * @param mixed $value
+   * @param  TKey|null  $key
+   * @param  TValue|array  $value
    * @return void
    */
   public function offsetSet($key, $value): void
@@ -255,7 +265,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Unset the item at a given offset.
    *
-   * @param string|int $key
+   * @param TKey $key
    * @return void
    */
   public function offsetUnset($key): void
@@ -279,10 +289,9 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   }
 
   /**
-   * Get the items in the collection that are not present in the given items.
+   * Get the items not present in the given items.
    *
-   * @param  mixed  $items
-   * @return BaseCollection
+   * @return BaseCollection<TKey, TValue>
    */
   public function diff($items)
   {
@@ -290,11 +299,10 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   }
 
   /**
-   * Get the items in the collection that are not present in the given items, using the callback.
+   * Get the items not present in the given items,
+   * using the callback.
    *
-   * @param  mixed  $items
-   * @param  callable  $callback
-   * @return BaseCollection
+   * @return BaseCollection<TKey, TValue>
    */
   public function diffUsing($items, callable $callback)
   {
@@ -304,8 +312,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Run a filter over each of the items.
    *
-   * @param  callable|null  $callback
-   * @return BaseCollection
+   * @return BaseCollection<TKey, TValue>
    */
   public function filter(callable $callback = null)
   {
@@ -315,7 +322,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Flip the items in the collection.
    *
-   * @return BaseCollection
+   * @return BaseCollection<TValue, TKey>
    */
   public function flip()
   {
@@ -325,8 +332,7 @@ abstract class ItemCollection extends BaseCollection implements JsonSerializable
   /**
    * Intersect the collection with the given items.
    *
-   * @param  mixed  $items
-   * @return BaseCollection
+   * @return BaseCollection<TKey, TValue>
    */
   public function intersect($items)
   {
